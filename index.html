@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Plaid code (create your plaid Tshirts)</title>
+  <title>Plaid Code (create your plaid Tshirts)</title>
+
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; }
     header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid #ddd; }
@@ -13,9 +14,29 @@
     .row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:10px 0; }
     .row label { font-weight:600; }
     .colors { display:flex; flex-direction:column; gap:8px; }
-    .colorItem { display:flex; align-items:center; gap:10px; }
+
+    /* ---- color row ---- */
+    .colorItem { display:flex; align-items:center; gap:10px; position:relative; }
     .colorItem input[type="text"] { width:110px; padding:6px 8px; }
-    .swatch { width:26px; height:26px; border-radius:6px; border:1px solid #ccc; }
+    .swatch {
+      width:26px; height:26px; border-radius:6px; border:1px solid #ccc;
+      cursor:pointer;
+    }
+
+    /* ---- iro.js popup ---- */
+    .picker-pop{
+      display:none;
+      position:absolute;
+      top:36px;
+      left:0;
+      z-index:9999;
+      background:#fff;
+      border:1px solid #ccc;
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+
     textarea { width:100%; height:90px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     canvas { width:100%; height:auto; border:1px solid #ddd; border-radius:10px; background:#fff; }
     .hint { font-size: 12px; color:#555; line-height:1.35; }
@@ -23,9 +44,10 @@
     button:hover { background:#f6f6f6; }
   </style>
 </head>
+
 <body>
 <header>
-  <b>Plaid code (create your plaid Tshirts)</b>
+  <b>Plaid Code (create your plaid Tshirts)</b>
   <span class="hint">Course use: rebuild behavior, don’t reuse their code/assets.</span>
 </header>
 
@@ -47,7 +69,7 @@
     </div>
 
     <div class="colors" id="colors"></div>
-    <p class="hint">Hex format: <code>#19CFCF</code>. The swatch updates automatically.</p>
+    <p class="hint">Hex format: <code>#19CFCF</code>. Click the color square to open the picker.</p>
 
     <hr />
 
@@ -57,6 +79,7 @@
         <input type="checkbox" id="xMirror" /> Mirror
       </label>
     </div>
+
     <textarea id="warpStripes" spellcheck="false"></textarea>
     <p class="hint">
       One stripe per line: <code>colorIndex,widthPx</code><br/>
@@ -93,6 +116,9 @@
   </section>
 </main>
 
+<!-- ✅ Add iro.js for the PlaidMaker-like picker -->
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
 <script>
   // ---------- Utilities ----------
   function clamp01(x){ return Math.max(0, Math.min(1, x)); }
@@ -113,11 +139,14 @@
       b: Math.round(a.b*(1-t)+b.b*t),
     };
   }
-  function darken(rgb, amount){ // amount 0..1
-    return mix(rgb, {r:0,g:0,b:0}, clamp01(amount));
-  }
-  function lighten(rgb, amount){
-    return mix(rgb, {r:255,g:255,b:255}, clamp01(amount));
+  function darken(rgb, amount){ return mix(rgb, {r:0,g:0,b:0}, clamp01(amount)); }
+  function lighten(rgb, amount){ return mix(rgb, {r:255,g:255,b:255}, clamp01(amount)); }
+
+  function normalizeHex(v){
+    const t = (v || '').trim();
+    if(!t) return null;
+    const withHash = t.startsWith('#') ? t : ('#' + t);
+    return hexToRgb(withHash) ? withHash.toUpperCase() : null;
   }
 
   // ---------- State ----------
@@ -148,9 +177,8 @@
 
   let S = structuredClone(DEFAULT);
 
-  // ---------- Parse/Serialize hash (similar spirit to PlaidMaker) ----------
+  // ---------- Parse/Serialize hash ----------
   function serializeToHash(){
-    // colors=19CFCF,FF0000,ffffff&twill=1x1&x_mirror=1&x_str=0x12,1x12,2x12&y_mirror=1&y_same=1&y_str=...
     const colors = S.colors.map(h=>h.replace('#','')).join(',');
     const x_str = S.warp.map(s => `${s.c}x${s.w}`).join(',');
     const y_str = (S.weft_same ? '' : S.weft.map(s => `${s.c}x${s.w}`).join(','));
@@ -173,7 +201,7 @@
     const colorsRaw = p.get('colors');
     if(colorsRaw){
       const arr = colorsRaw.split(',').map(x => '#'+x.trim());
-      if(arr.every(x => hexToRgb(x))) S.colors = arr;
+      if(arr.every(x => hexToRgb(x))) S.colors = arr.map(x=>x.toUpperCase());
     }
     const tw = p.get('twill'); if(tw) S.twill = tw;
     S.x_mirror = p.get('x_mirror') === '1';
@@ -200,50 +228,112 @@
     return true;
   }
 
+  // ---------- iro.js popup picker ----------
+  // Close any open picker when clicking outside
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.picker-pop').forEach(p => p.style.display = 'none');
+  });
+
+  function attachIroPicker({ rowEl, swatchEl, textEl, index }) {
+    // Create popup container
+    const pop = document.createElement('div');
+    pop.className = 'picker-pop';
+    rowEl.appendChild(pop);
+
+    let picker = null;
+
+    function openPicker(e){
+      e.stopPropagation(); // prevent doc click from closing immediately
+
+      // Close others
+      document.querySelectorAll('.picker-pop').forEach(p => { if(p !== pop) p.style.display = 'none'; });
+
+      pop.style.display = 'block';
+
+      const startHex = normalizeHex(textEl.value) || '#FFFFFF';
+
+      if(!picker){
+        picker = new iro.ColorPicker(pop, {
+          width: 220,
+          color: startHex,
+          layout: [
+            { component: iro.ui.Box },
+            { component: iro.ui.Slider, options: { sliderType: 'hue' } }
+          ]
+        });
+
+        picker.on('color:change', (c) => {
+          const hex = c.hexString.toUpperCase();
+          textEl.value = hex;
+          swatchEl.style.background = hex;
+          S.colors[index] = hex;
+          schedule();
+        });
+      } else {
+        picker.color.set(startHex);
+      }
+    }
+
+    // Open on swatch click
+    swatchEl.addEventListener('click', openPicker);
+    // Also open when focusing/clicking input (optional)
+    textEl.addEventListener('focus', (e) => { openPicker(e); });
+
+    // Stop clicks inside popup from closing it
+    pop.addEventListener('click', (e) => e.stopPropagation());
+
+    // Manual hex typing syncs picker (if exists)
+    textEl.addEventListener('input', () => {
+      const hex = normalizeHex(textEl.value);
+      if(hex){
+        textEl.value = hex;
+        swatchEl.style.background = hex;
+        S.colors[index] = hex;
+        if(picker) picker.color.set(hex);
+        schedule();
+      }
+    });
+  }
+
   // ---------- UI ----------
   function renderColorInputs(){
     el.colorsBox.innerHTML = '';
+
     S.colors.forEach((hex, i)=>{
       const row = document.createElement('div');
       row.className = 'colorItem';
 
       const inp = document.createElement('input');
       inp.type = 'text';
-      inp.value = hex.toUpperCase();
-      inp.addEventListener('input', ()=>{
-        const v = inp.value.trim();
-        if(hexToRgb(v)) {
-          S.colors[i] = v.startsWith('#') ? v : '#'+v;
-          sw.style.background = S.colors[i];
-          schedule();
-        }
-      });
+      inp.value = (hex || '#FFFFFF').toUpperCase();
+      inp.setAttribute('maxlength', '7');
 
       const sw = document.createElement('div');
       sw.className = 'swatch';
-      sw.style.background = hex;
+      sw.style.background = (hex || '#FFFFFF');
 
       const del = document.createElement('button');
       del.textContent = 'Delete';
-      del.addEventListener('click', ()=>{
+      del.addEventListener('click', (e)=>{
+        e.stopPropagation();
         if(S.colors.length <= 2) return;
         S.colors.splice(i,1);
-        // also clamp stripe color indices
         S.warp.forEach(s => s.c = Math.min(s.c, S.colors.length-1));
         S.weft.forEach(s => s.c = Math.min(s.c, S.colors.length-1));
         syncTextareas();
-        schedule();
         renderColorInputs();
+        schedule();
       });
 
       row.append(inp, sw, document.createTextNode(' index '+i+' '), del);
       el.colorsBox.appendChild(row);
+
+      // ✅ Add PlaidMaker-like picker
+      attachIroPicker({ rowEl: row, swatchEl: sw, textEl: inp, index: i });
     });
   }
 
-  function stripesToText(arr){
-    return arr.map(s => `${s.c},${s.w}`).join('\n');
-  }
+  function stripesToText(arr){ return arr.map(s => `${s.c},${s.w}`).join('\n'); }
   function textToStripes(txt){
     return txt.split('\n')
       .map(line => line.trim())
@@ -332,7 +422,6 @@
 
   // ---------- Plaid renderer ----------
   function mirrorStripes(stripes){
-    // Mirror by appending reversed (without duplicating last stripe to avoid hard seam)
     const rev = stripes.slice().reverse();
     return stripes.concat(rev);
   }
@@ -349,7 +438,7 @@
       const rgb = hexToRgb(c) || {r:200,g:200,b:200};
       for(let i=0;i<s.w;i++) out[k++] = rgb;
     }
-    return out; // length = period in pixels
+    return out;
   }
 
   function render(){
@@ -363,9 +452,8 @@
     const img = ctx.createImageData(W,H);
     const data = img.data;
 
-    // Weaving illusion parameters (tweak to taste)
-    const baseMix = 0.55;   // how much weft influences intersection color
-    const shadeAmt = 0.10;  // subtle depth
+    const baseMix = 0.55;
+    const shadeAmt = 0.10;
     const twillOn = (S.twill === '1x1');
 
     for(let y=0; y<H; y++){
@@ -373,16 +461,13 @@
       for(let x=0; x<W; x++){
         const cx = warpRGB[x % warpRGB.length];
 
-        // Combine warp + weft
         let c = mix(cx, cy, baseMix);
 
-        // Twill 1x1: alternating dominance (like over-under)
         if(twillOn){
           const overWeft = ((x + y) & 1) === 0;
           c = overWeft ? mix(cx, cy, 0.70) : mix(cx, cy, 0.40);
         }
 
-        // Add tiny “thread” shading
         const rib = ((x % 6) === 0) || ((y % 6) === 0);
         c = rib ? darken(c, shadeAmt) : lighten(c, shadeAmt * 0.5);
 
@@ -395,7 +480,6 @@
     }
     ctx.putImageData(img,0,0);
 
-    // Update URL hash live (so it behaves like PlaidMaker)
     const newHash = serializeToHash();
     if(location.hash !== newHash) history.replaceState(null,'', newHash);
   }
