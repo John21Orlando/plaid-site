@@ -1,7 +1,7 @@
 (function(){
-  const path = location.pathname.split('/').pop() || 'home.html';
+  const path = location.pathname.split('/').pop() || 'index.html';
   const map = {
-    'home.html': 'home',
+    'index.html': 'home',
     'shop.html': 'shop',
     'archive.html': 'archive',
     'diy.html': 'diy',
