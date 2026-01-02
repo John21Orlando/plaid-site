@@ -1,130 +1,133 @@
 .shop-wrap{
-  display:grid;
+  display: grid;
   grid-template-columns: 220px 1fr 260px;
   gap: 28px;
   padding: 14px 0 40px;
 }
 
-/* left sidebar (sort/filters/categories) */
+/* ===============================
+   LEFT SIDEBAR (SORT / FILTERS)
+   =============================== */
 .sidebar{
   padding-top: 8px;
-  color: rgba(0,0,0,0.5);
   font-size: 14px;
   line-height: 1.45;
+  color: rgba(0,0,0,0.5);
 }
 
 .sidebar h4{
   margin: 14px 0 6px;
   font-size: 18px;
   font-weight: 800;
-  color: rgba(0,0,0,0.55);
   letter-spacing: .2px;
+  color: rgba(0,0,0,0.55);
 }
 
 .sidebar .block{ margin-bottom: 18px; }
 .sidebar .item{ margin: 2px 0; cursor: default; }
 .sidebar .item strong{ font-weight: 700; }
 
-/* center grid */
+/* ===============================
+   CENTER GRID
+   =============================== */
 .grid{
   padding-top: 6px;
 }
 
 .grid-top{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  color: rgba(0,0,0,0.5);
+  margin: 2px 0 18px;
+
   font-size: 12px;
   letter-spacing: .8px;
   text-transform: uppercase;
-  margin: 2px 0 18px;
+  color: rgba(0,0,0,0.5);
 }
 
 .product-grid{
-  display:grid;
+  display: grid;
   grid-template-columns: repeat(4, minmax(180px, 1fr));
   gap: 44px 46px;
 }
 
 .card{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
-/* ✅ 关键：把商品图固定到你要的“商品卡片尺寸” */
+/* 商品图片（最终尺寸方案） */
 .shirt-img{
-  width: 180px;       /* 你参考图的大小感 */
+  width: 180px;
   height: auto;
   display: block;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.08);
 }
 
-/* 如果你的图片比例不统一，想让视觉更“整齐”，用这个版本（二选一） */
-/*
-.shirt-img{
-  width: 180px;
-  height: 240px;
-  object-fit: cover;
-  display:block;
-  border-radius:12px;
-  border: 1px solid rgba(0,0,0,0.08);
-}
-*/
-
 .card .sku{
   font-size: 12px;
   color: rgba(0,0,0,0.5);
 }
 
-/* right list */
+/* ===============================
+   RIGHT LIST (SEASON)
+   =============================== */
 .rightlist{
-  padding-top: 8px;                 /* ✅ 和 sidebar 顶部对齐 */
-  color: rgba(0,0,0,0.5);
+  padding-top: 8px;     /* 与 sidebar 顶部对齐 */
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* ✅ SEASON 标题：做成和 sidebar h4 一模一样（同级标题） */
+/* SEASON 标题 —— 与 sidebar h4 完全同级 */
 .season-title{
   margin: 14px 0 6px;
   font-size: 18px;
   font-weight: 800;
-  color: rgba(0,0,0,0.55);
   letter-spacing: .2px;
   text-transform: uppercase;
+  color: rgba(0,0,0,0.55);
 }
 
-/* 右侧条目：Sxx / Name / Color 三行 */
+/* 单个 Season 项 */
 .season-item{
   margin: 8px 0 14px;
   line-height: 1.35;
 }
 
+/* Sxx */
 .season-item .code{
   font-size: 12px;
   letter-spacing: .8px;
-  opacity: .6;
+  color: rgba(0,0,0,0.5);
 }
 
+/* Name / Color */
 .season-item .name,
 .season-item .color{
   font-size: 14px;
-  opacity: .6;
+  color: rgba(0,0,0,0.5);
 }
 
-/* responsive */
+/* ===============================
+   RESPONSIVE
+   =============================== */
 @media (max-width: 1200px){
   .shop-wrap{ grid-template-columns: 220px 1fr; }
-  .rightlist{ display:none; }
-  .product-grid{ grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+  .rightlist{ display: none; }
+  .product-grid{
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
 }
+
 @media (max-width: 900px){
   .shop-wrap{ grid-template-columns: 1fr; }
-  .sidebar{ display:none; }
-  .product-grid{ grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+  .sidebar{ display: none; }
+  .product-grid{
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
 }
