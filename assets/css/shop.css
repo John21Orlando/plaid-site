@@ -33,7 +33,7 @@
 .grid-top{
   display:flex;
   align-items:center;
-  justify-content: flex-start;
+  justify-content:flex-start;
   gap: 12px;
   color: rgba(0,0,0,0.5);
   font-size: 12px;
@@ -55,32 +55,26 @@
   gap: 10px;
 }
 
-/* ✅ 关键：让图片真正显示得像商品 */
+/* ✅ 关键：把商品图固定到你要的“商品卡片尺寸” */
 .shirt-img{
-  width: 180px;
+  width: 180px;       /* 你参考图的大小感 */
   height: auto;
   display: block;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.08);
 }
 
-/* 如果你还保留占位框，可以不删；但有图后一般不需要 */
-.shirt-ph{
+/* 如果你的图片比例不统一，想让视觉更“整齐”，用这个版本（二选一） */
+/*
+.shirt-img{
   width: 180px;
-  aspect-ratio: 3/4;
+  height: 240px;
+  object-fit: cover;
+  display:block;
+  border-radius:12px;
   border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
-  position: relative;
-  overflow:hidden;
 }
-.shirt-ph::after{
-  content:"";
-  position:absolute;
-  inset: 12px;
-  border: 1px dashed rgba(0,0,0,0.12);
-  border-radius: 10px;
-}
+*/
 
 .card .sku{
   font-size: 12px;
@@ -89,23 +83,23 @@
 
 /* right list */
 .rightlist{
-  padding-top: 8px;  /* ✅ 和 sidebar 一样，顶部就对齐了 */
+  padding-top: 8px;                 /* ✅ 和 sidebar 顶部对齐 */
   color: rgba(0,0,0,0.5);
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* ✅ SEASON 标题：直接做成和 sidebar h4 一样 */
+/* ✅ SEASON 标题：做成和 sidebar h4 一模一样（同级标题） */
 .season-title{
-  margin: 14px 0 6px;       /* ✅ 对齐 SORT BY 的 h4 */
-  font-size: 18px;          /* ✅ 同字号 */
-  font-weight: 800;         /* ✅ 同粗细 */
-  color: rgba(0,0,0,0.55);  /* ✅ 同颜色 */
+  margin: 14px 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.55);
   letter-spacing: .2px;
   text-transform: uppercase;
 }
 
-/* 右侧条目（你要的三行排版） */
+/* 右侧条目：Sxx / Name / Color 三行 */
 .season-item{
   margin: 8px 0 14px;
   line-height: 1.35;
@@ -132,5 +126,4 @@
 @media (max-width: 900px){
   .shop-wrap{ grid-template-columns: 1fr; }
   .sidebar{ display:none; }
-  .product-grid{ grid-template-columns: repeat(2, minmax(180px, 1fr)); }
-}
+  .product-grid{ grid-template-columns: repeat(2, minmax(
