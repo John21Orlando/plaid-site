@@ -2,18 +2,20 @@
   const grid = document.getElementById("productGrid");
   if (!grid) return;
 
-  // 先放 24 个占位（你后面改成 20~40 都行）
-  const N = 24;
+  const products = [
+    { code: "S1-NO.01", img: "assets/img/products/P1.jpg" },
+    { code: "S1-NO.02", img: "assets/img/products/P2.jpg" },
+  ];
 
   let html = "";
-  for (let i = 1; i <= N; i++) {
-    const num = String(i).padStart(2, "0");
+  products.forEach(p => {
     html += `
       <div class="card">
-        <div class="shirt-ph" aria-label="placeholder"></div>
-        <div class="sku">S1-NO.${num}</div>
+        <img class="shirt-img" src="${p.img}" alt="${p.code}">
+        <div class="sku">${p.code}</div>
       </div>
     `;
-  }
+  });
+
   grid.innerHTML = html;
 })();
