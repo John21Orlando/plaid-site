@@ -126,4 +126,5 @@
 @media (max-width: 900px){
   .shop-wrap{ grid-template-columns: 1fr; }
   .sidebar{ display:none; }
-  .product-grid{ grid-template-columns: repeat(2, minmax(
+  .product-grid{ grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
