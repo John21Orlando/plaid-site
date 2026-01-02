@@ -37,9 +37,9 @@
   gap: 12px;
   color: rgba(0,0,0,0.5);
   font-size: 12px;
-  letter-spacing: .3px;
+  letter-spacing: .8px;
   text-transform: uppercase;
-  margin: 6px 0 16px;
+  margin: 2px 0 18px;
 }
 
 .product-grid{
@@ -85,6 +85,7 @@
   color: rgba(0,0,0,0.5);
   font-size: 14px;
   line-height: 1.6;
+  opacity: .5;
 }
 
 .rightlist .entry{ margin: 2px 0; white-space: pre-line; }

@@ -9,6 +9,7 @@
   };
   const key = map[path];
   if(!key) return;
+
   document.querySelectorAll('[data-nav]').forEach(a=>{
     if(a.getAttribute('data-nav') === key) a.classList.add('active');
   });

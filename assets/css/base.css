@@ -4,11 +4,24 @@
   --muted: rgba(0,0,0,0.5);
   --border: #e6e6e6;
   --bg: #ffffff;
+
+  --font-main: "Mukta Vaani", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 *{ box-sizing: border-box; }
-html, body{ margin:0; padding:0; background: var(--bg); color: var(--text); }
-body{ font-family: "Mukta Vaani", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+html, body{
+  margin:0;
+  padding:0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body{
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 a{ color: inherit; text-decoration: none; }
 a:hover{ text-decoration: underline; }
@@ -18,9 +31,13 @@ a:hover{ text-decoration: underline; }
   margin: 0 auto;
 }
 
+/* top bar should stay above page content so links are always clickable */
 .topbar{
   background: var(--brand-yellow);
   border-bottom: 1px solid rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 9999;
 }
 
 .nav{
@@ -49,6 +66,8 @@ a:hover{ text-decoration: underline; }
 .navlinks a{
   padding: 8px 10px;
   border: 1px solid transparent;
+  position: relative;
+  z-index: 10000;
 }
 
 .navlinks a.active{

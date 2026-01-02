@@ -1,21 +1,19 @@
-(function(){
-  // generate 32 placeholder products (scrollable)
-  const grid = document.getElementById('productGrid');
-  if(!grid) return;
+(function () {
+  const grid = document.getElementById("productGrid");
+  if (!grid) return;
 
-  const count = 32; // you said 20-40
-  for(let i=1;i<=count;i++){
-    const card = document.createElement('div');
-    card.className = 'card';
+  // 先放 24 个占位（你后面改成 20~40 都行）
+  const N = 24;
 
-    const ph = document.createElement('div');
-    ph.className = 'shirt-ph';
-
-    const sku = document.createElement('div');
-    sku.className = 'sku';
-    sku.textContent = `S1-NO.${String(i).padStart(2,'0')}`;
-
-    card.append(ph, sku);
-    grid.appendChild(card);
+  let html = "";
+  for (let i = 1; i <= N; i++) {
+    const num = String(i).padStart(2, "0");
+    html += `
+      <div class="card">
+        <div class="shirt-ph" aria-label="placeholder"></div>
+        <div class="sku">S1-NO.${num}</div>
+      </div>
+    `;
   }
+  grid.innerHTML = html;
 })();
