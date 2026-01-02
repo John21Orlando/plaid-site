@@ -1,0 +1,102 @@
+.shop-wrap{
+  display:grid;
+  grid-template-columns: 220px 1fr 260px;
+  gap: 28px;
+  padding: 14px 0 40px;
+}
+
+/* left sidebar (sort/filters/categories) */
+.sidebar{
+  padding-top: 8px;
+  color: rgba(0,0,0,0.5);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sidebar h4{
+  margin: 14px 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.55);
+  letter-spacing: .2px;
+}
+
+.sidebar .block{ margin-bottom: 18px; }
+.sidebar .item{ margin: 2px 0; cursor: default; }
+.sidebar .item strong{ font-weight: 700; }
+
+/* center grid (placeholder shirts) */
+.grid{
+  padding-top: 6px;
+}
+
+.grid-top{
+  display:flex;
+  align-items:center;
+  justify-content: flex-start;
+  gap: 12px;
+  color: rgba(0,0,0,0.5);
+  font-size: 12px;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  margin: 6px 0 16px;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 44px 46px;
+}
+
+.card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 10px;
+}
+
+.shirt-ph{
+  width: 180px;
+  aspect-ratio: 3/4;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+  position: relative;
+  overflow:hidden;
+}
+
+.shirt-ph::after{
+  content:"";
+  position:absolute;
+  inset: 12px;
+  border: 1px dashed rgba(0,0,0,0.12);
+  border-radius: 10px;
+}
+
+.card .sku{
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
+}
+
+/* right list */
+.rightlist{
+  padding-top: 8px;
+  color: rgba(0,0,0,0.5);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rightlist .entry{ margin: 2px 0; white-space: pre-line; }
+
+/* responsive */
+@media (max-width: 1200px){
+  .shop-wrap{ grid-template-columns: 220px 1fr; }
+  .rightlist{ display:none; }
+  .product-grid{ grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 900px){
+  .shop-wrap{ grid-template-columns: 1fr; }
+  .sidebar{ display:none; }
+  .product-grid{ grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}

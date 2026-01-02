@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PLAID CODE — DIY</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta+Vaani:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/diy.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="nav">
+        <div class="brand">PLAID CODE</div>
+        <div class="navlinks">
+          <a href="home.html" data-nav="home">HOME</a>
+          <a href="shop.html" data-nav="shop">SHOP</a>
+          <a href="archive.html" data-nav="archive">ARCHIVE SALE</a>
+          <a href="diy.html" data-nav="diy">DIY</a>
+          <a href="search.html" data-nav="search">SEARCH</a>
+        </div>
+        <div class="navspacer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="diy-wrap">
+      <!-- Left controls -->
+      <section class="panel">
+        <div class="page-title" style="margin:0 0 8px;">MAKE A PLAID</div>
+
+        <div class="row">
+          <label>Twill</label>
+          <select id="twill">
+            <option value="1x1">1x1</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Colors</label>
+          <button id="addColor">+ Add</button>
+        </div>
+
+        <div class="colors" id="colors"></div>
+        <p class="hint">Hex format: <code>#19CFCF</code>. Click the color square to open the picker.</p>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <label>Warp (X stripes)</label>
+          <label style="font-weight:600">
+            <input type="checkbox" id="xMirror" /> Mirror
+          </label>
+        </div>
+        <textarea id="warpStripes" spellcheck="false"></textarea>
+        <p class="hint">One stripe per line: <code>colorIndex,widthPx</code>. Example: <code>0,12</code></p>
+
+        <div class="row">
+          <label>Weft (Y stripes)</label>
+          <label style="font-weight:600">
+            <input type="checkbox" id="yMirror" /> Mirror
+          </label>
+        </div>
+
+        <div class="row">
+          <label style="font-weight:600">
+            <input type="checkbox" id="weftSame" /> Same as warp
+          </label>
+        </div>
+
+        <textarea id="weftStripes" spellcheck="false"></textarea>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <button id="saveLink">Copy Share Link</button>
+          <button id="reset">Reset</button>
+        </div>
+        <p class="hint" id="status"></p>
+      </section>
+
+      <!-- Right preview -->
+      <section class="panel">
+        <div class="page-title" style="margin:0 0 8px;">PREVIEW</div>
+        <canvas id="cv" width="1200" height="720"></canvas>
+      </section>
+    </div>
+  </div>
+
+  <!-- iro.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+  <!-- your split JS -->
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/plaid-core.js"></script>
+  <script src="assets/js/color-picker.js"></script>
+  <script src="assets/js/app-make.js"></script>
+</body>
+</html>
