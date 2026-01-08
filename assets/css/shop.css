@@ -81,6 +81,7 @@
   padding-top: 8px;     /* 与 sidebar 顶部对齐 */
   font-size: 14px;
   line-height: 1.6;
+  margin-left: 120px;
 }
 
 /* SEASON 标题 —— 与 sidebar h4 完全同级 */
