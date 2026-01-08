@@ -2,20 +2,21 @@
   const grid = document.getElementById("productGrid");
   if (!grid) return;
 
-  const products = [
-    { code: "S1-NO.01", img: "assets/img/products/P1.jpg" },
-    { code: "S1-NO.02", img: "assets/img/products/P2.jpg" },
-  ];
-
+  const TOTAL = 25; // 👈 你有多少张图
   let html = "";
-  products.forEach(p => {
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const code = `S1-NO.${String(i).padStart(2, "0")}`;
+    const img = `assets/img/products/P${i}.jpg`;
+
     html += `
       <div class="card">
-        <img class="shirt-img" src="${p.img}" alt="${p.code}">
-        <div class="sku">${p.code}</div>
+        <img class="shirt-img" src="${img}" alt="${code}">
+        <div class="sku">${code}</div>
       </div>
     `;
-  });
+  }
 
   grid.innerHTML = html;
 })();
+
